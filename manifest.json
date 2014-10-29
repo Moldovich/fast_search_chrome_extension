@@ -2,11 +2,11 @@
     "manifest_version": 2,
     "name": "Fast Search",
     "description": "Puts selected text to search box and finds it on the current page. Like Cntrl+С Cntrl+F Cntrl+V combination.",
-    "version": "1.0.3",
+    "version": "1.0.7",
     "content_scripts": [
         {
             "js": ["jquery.min.js","hilitor-yanosh.js"],
-            "matches": [ "http://*/*","https://*/*","file://*/*" ],
+            "matches": [ "\u003Call_urls>" ],
             "run_at": "document_end"
         }
     ],
@@ -23,13 +23,11 @@
     },
     "permissions": [
         "tabs",
-        "http://*/*",
-        "https://*/*",
-        "file://*/*",
+        "\u003Call_urls>",
         "notifications",
         "storage"
     ],
-    "web_accessible_resources": ["options.html,hilitor-yanosh.js"],
+    "web_accessible_resources": ["options.html","hilitor-yanosh.js","content.js"],
 
     "options_page": "options.html",
     "commands": {

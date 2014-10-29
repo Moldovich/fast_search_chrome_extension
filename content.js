@@ -116,7 +116,7 @@ function InitCss(css_class,property){
 
     createClass('.found_text', 'background:rgb(248, 173, 230);');
     createClass('.found_text.current_found', 'background:rgb(99, 245, 233);');
-    createClass('.fast_search_result', 'display:none; z-index:99999; padding: 3px; position:fixed; top:1%; left:0.5%; max-width: 332px;' +
+    createClass('.fast_search_result', 'display:none; z-index:99999; padding: 6px; position:fixed; top:1%; left:0.5%; max-width: 332px;' +
         ' max-height: 70px;text-align:left;-webkit-box-sizing: content-box;box-sizing: content-box;' );
     createClass('.fast_search_result.mini', 'display:none; z-index:99999; padding: 3px; position:fixed; top:1%; left:0.5%;width: 340px; max-width: 340px; max-height: 30px;' );
     createClass('.fast_search_result.right_poz', 'left: inherit;right: 0.5%;');
@@ -131,7 +131,7 @@ function InitCss(css_class,property){
     createClass('.mini #searchbox_id','max-width: 154px;margin-top: -31px;margin-left: 77px;width: 100%;');
     createClass('.fast_search_result input[type="text"]', 'max-height:25px;padding: 0;');
 
-    createClass('#current_found', 'display:inline-block;');
+    createClass('#current_found', 'display:inline-block;font-weight: bold;');
     createClass('#count_matches', 'display:inline-block;');
 
     createClass('#fast_search_text_info' , 'display:inline-block;font-size: 1.1em;font-family: Century Gothic;');
@@ -154,7 +154,7 @@ function InitCss(css_class,property){
 
 
 /*function onThemeYellowLoaded(){
-    alert('onThemeYellowLoaded');
+    //alert('onThemeYellowLoaded');
 }*/
 // GLOBAL VARIABLES GROUP
 // intercept shortcuts flags
@@ -315,7 +315,7 @@ var myHilitor = false;
         });
     });*/
     //adding our div search result dialog
-    var search_content = '<div class="fast_search_result noselect " matches="0" current_found="0" title="search_form">' +
+    var search_content = '<div class="fast_search_result noselect" matches="0" current_found="0" title="search_form">' +
                                 '<div id="fast_search_text_info">' +
                                     '<div id="current_found">0</div>' +
                                     '<span>/</span>' +
@@ -328,76 +328,536 @@ var myHilitor = false;
                             '<input class="noFocus" type="text" id="searchbox_id" name="searchbox" size="50" value=""/>' +
                          '</div>';
 
-    $('body').append(search_content);
+    if(!$("div").is(".fast_search_result.noselect"))
+    {
+        $('body').append(search_content);
+            $( ".fast_search_next" ).click(function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                Fast_search_next($( ".fast_search_result").attr('current_found'));
+            });
+
+            $( ".fast_search_prev" ).click(function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                Fast_search_prev($( ".fast_search_result").attr('current_found'));
+            });
 
 
-
-        $( ".fast_search_next" ).click(function(e) {
-            e.stopPropagation();
+        $('#searchbox_id').keyup(function(e){
             e.preventDefault();
-            Fast_search_next($( ".fast_search_result").attr('current_found'));
-        });
-
-        $( ".fast_search_prev" ).click(function(e) {
             e.stopPropagation();
-            e.preventDefault();
-            Fast_search_prev($( ".fast_search_result").attr('current_found'));
-        });
-
-
-    $('#searchbox_id').keyup(function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        var key = $(this).val()
-        Search_on_fly(key);
-        ////console.log('e.target - ',e.target.tagName);
-     });
-
-    function maximize_search_form()
-    {
-        createClass('.fast_search_result.mini input[type="text"]', 'width: 68%;font-size:27px');
-        createClass('.fast_search_result.mini', 'height: 30px;');
-        createClass('.fast_search_result.mini span,div', 'font-size:18px');
-        //createClass('.fast_search_result.mini .fast_search_prev', 'margin-left: 27px;margin-top: -4px;');
-        //createClass('.fast_search_result.mini .fast_search_next', 'margin-right: -17px;margin-top: -6px;');
-        $('#current_found,#count_matches').css('margin-bottom','1%');
-        $('#fast_search_text_info').css('margin','0').css('width','75%');
-        $('#searchbox_id').css('background-position-y','2px').css('background-position-x','98%');
-        $('.fast_search_result').removeClass('mini');
+            var key = $(this).val()
+            Search_on_fly(key);
+            ////console.log('e.target - ',e.target.tagName);
+         });
     }
 
 
-    function minimize_search_form()
-    {
-        $('.fast_search_result').addClass('mini');
-        $('.fast_search_result.mini').css( 'height', '32px').css('min-width', '370px');
-        $('.fast_search_result.mini span,.fast_search_result.mini div').css( 'font-size','18px');
-        $('#current_found,#count_matches').css('margin-bottom','1%');
-        $('#fast_search_text_info').css('margin','0').css('width','65%');
-        $('#searchbox_id').css('margin-top','-8%').css('margin-left','28%').css('max-width','164px').css('background-position-y','2px').css('background-position-x','98%');
-        $('#ewg532_fast_search_buttons').css('float','right');
-        alert('minimized content');
-    }
+    $(document).unbind('keydown');
+
+    $( document ).keydown(function(e) {
+        console.log('e.which - ' + e.which );
+         console.log('e.charCode - ' + e.charCode );
+         console.log(e );
+        //restore some default browser keys
+        if(e.which == 116)//F6
+         {
+         location.reload('true');
+         }
+
+        // hide window on Escape
+        if(e.which == 27)//Esc
+        {
+            if($(".fast_search_result.noselect").css('display')== 'block')
+                $(".fast_search_result.noselect").hide('slow');
+        }
 
 
-    //setting search form minimal style
-    /*if(fast_search_minimal_style)
-    {
-        minimize_search_form();
-        //console.log('minimized');
-        return false;
-    }
-    else
-    {
-        maximize_search_form();
-        //console.log('Maximized');
-        return false;
-    }*/
+        //console.log('e.target.tagName - ',e.target.tagName);
+        if(e.target.tagName != 'INPUT' && e.target.tagName != 'TEXTAREA')
+        {
+            // shift + F(а)
+            if(e.shiftKey && (e.keyCode == 70 ||  e.keyCode == 1040))
+            {
+                //e.preventDefault();
+                //e.stopPropagation();
+                myHilitor.remove();
+                $('.fast_search_result').show('1500');
+                if (getSelText()) {
+                    matches = $('.found_text').length;
+                    if (matches < 0)
+                        matches = 0;
+
+                    $($('.found_text')[0]).addClass('current_found').prop('contenteditable',true).focus().prop('contenteditable',false);
+                    $( ".fast_search_result").attr('current_found','1').attr('matches',matches);
+
+                    $('#count_matches').text(matches);
+                    $('#current_found').text($( ".fast_search_result").attr('current_found'));
+
+                    //$('.fast_search_form').hide();
+                    $('.fast_search_result').show('1500');
+
+                }
+                else
+                {
+                    //recount matches
+                    var matches = $('.found_text').length;
+                    $( ".fast_search_result").attr('matches',matches);
+                    $('#count_matches').text(matches);
+
+                    // just open search form
+                    $('.fast_search_result').show('1500');
+                    $('#searchbox_id').focus();
+
+                    //$('.fast_search_form').show('1500');
+                }
+                //$('.fast_search_next').trigger('click');
+            }
+            //Shift + Z(Я) go to previous found fragment
+            else if(e.shiftKey && (e.keyCode == 90 ||  e.keyCode == 1071))
+            {
+                //e.preventDefault();
+                //e.stopPropagation();
+                $('.fast_search_prev').trigger('click');
+            }
+            //Shift + X(Ч) go to next found fragment
+            else if(e.shiftKey && (e.keyCode == 88 ||  e.keyCode == 1063))
+            {
+                //e.preventDefault();
+                //e.stopPropagation();
+                $('.fast_search_next').trigger('click');
+            }
+            //Shift + Q(Й) cancel search and close search form
+            else if(e.shiftKey && (e.keyCode == 81 ||  e.keyCode == 1049))
+            {
+                //e.preventDefault();
+                //e.stopPropagation();
+                myHilitor.remove();
+
+                //hiding search form
+                $('.fast_search_result').hide('slow');
+                //removing highlighting of old results
+                $('em.found_text').each(function(){
+                    $(this).after($(this).html()).remove();
+                });
+                // setting all counters to zero
+                $('#count_matches').text(0);
+                $('#current_found').text(0);
+                $( ".fast_search_result").attr('matches',0).attr('current_found',0);
+
+            }
+            //если включен перехват нажатия F3
+            if(intercept_F3_keypress)
+            {
+
+                if(e.shiftKey==1 && e.keyCode == 114){
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    $('.fast_search_prev').trigger('click');
+                }
+                else
+                if(e.which == 114)
+                {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $('.fast_search_next').trigger('click');
+                }
+            }
+            //если включен перехват нажатия Ctrl + F
+            if(intercept_Ctrl_F_keypress)
+            {
+                if(e.ctrlKey && e.which == 70)
+                {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    //console.log('e.which - ' + e.which );
+                    //console.log('e.charCode - ' + e.charCode );
+                    //console.log(e );
+
+                    myHilitor.remove();
+                    $('.fast_search_result').show('1500');
+                    if (getSelText()) {
+                        matches = $('.found_text').length;
+                        if (matches < 0)
+                            matches = 0;
+
+                        $($('.found_text')[0]).addClass('current_found').prop('contenteditable',true).focus().prop('contenteditable',false);
+                        $( ".fast_search_result").attr('current_found','1').attr('matches',matches);
+
+                        $('#count_matches').text(matches);
+                        $('#current_found').text($( ".fast_search_result").attr('current_found'));
+
+                        //$('.fast_search_form').hide();
+                        $('.fast_search_result').show('1500');
+
+
+
+                    }
+                    else
+                    {
+                        $('.fast_search_result').show('1500');
+                        $('#searchbox_id').focus();
+
+                        //$('.fast_search_form').show('1500');
+                    }
+                }
+
+            }
+
+        }
+        else
+        {
+            // prevent default search actions while typing
+            if(intercept_Ctrl_F_keypress)
+            {
+                if(e.ctrlKey && e.which == 70)
+                    e.preventDefault();
+            }
+            if(intercept_F3_keypress)
+            {
+                if(e.which == 114)
+                    e.preventDefault();
+            }
+
+
+        }
+
+    });
+
+
+    $( document ).keyup(function(e) {
+        console.log('e.which - ' + e.which );
+        console.log('e.charCode - ' + e.charCode );
+        console.log(e );
+    });
+
+    $( document ).keypress(function(e) {
+        console.log('e.which - ' + e.which );
+        console.log('e.charCode - ' + e.charCode );
+        console.log(e );
+    });
 
 })();
 
+function maximize_search_form()
+{
+    createClass('.fast_search_result.mini input[type="text"]', 'width: 68%;font-size:27px');
+    createClass('.fast_search_result.mini', 'height: 30px;');
+    createClass('.fast_search_result.mini span,div', 'font-size:18px');
+    //createClass('.fast_search_result.mini .fast_search_prev', 'margin-left: 27px;margin-top: -4px;');
+    //createClass('.fast_search_result.mini .fast_search_next', 'margin-right: -17px;margin-top: -6px;');
+    $('#current_found,#count_matches').css('margin-bottom','1%');
+    $('#fast_search_text_info').css('margin','0').css('width','75%');
+    $('#searchbox_id').css('background-position-y','2px').css('background-position-x','98%');
+    $('.fast_search_result').removeClass('mini');
+}
+
+
+function minimize_search_form()
+{
+    $('.fast_search_result').addClass('mini');
+    $('.fast_search_result.mini').css( 'height', '32px').css('min-width', '370px');
+    $('.fast_search_result.mini span,.fast_search_result.mini div').css( 'font-size','18px');
+    $('#current_found,#count_matches').css('margin-bottom','1%');
+    $('#fast_search_text_info').css('margin','0').css('width','65%');
+    $('#searchbox_id').css('margin-top','-8%').css('margin-left','28%').css('max-width','164px').css('background-position-y','2px').css('background-position-x','98%');
+    $('#ewg532_fast_search_buttons').css('float','right');
+    //alert('minimized content');
+}
+
+function Emulate_Ctrl_F(){
+    var virtualKeyboardChromeExtensionClickedElem = document.getElementById('searchbox_id');
+
+    /*var keyboardEvent = document.createEvent("KeyboardEvent");
+    var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent[initMethod](
+        "keydown", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        true, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        0, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+
+    delete keyboardEvent.ctrlKey;
+    keyboardEvent.ctrlKey = true;
+
+    virtualKeyboardChromeExtensionClickedElem.dispatchEvent(keyboardEvent);*/
+
+
+    var keyboardEvent = document.createEvent("KeyboardEvent");
+    initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent[initMethod](
+        "keydown", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        false, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        0, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    //alert("F".charCodeAt(0));
+
+    delete keyboardEvent.which;
+    keyboardEvent.which = 114;
+    virtualKeyboardChromeExtensionClickedElem.dispatchEvent(keyboardEvent);
+
+    /*keyboardEvent = document.createEvent("KeyboardEvent");
+    initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent[initMethod](
+        "keyup", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        false, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        0, // keyCodeArg : unsigned long the virtual key code, else 0
+        "U+0046" // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    virtualKeyboardChromeExtensionClickedElem.dispatchEvent(keyboardEvent);*/
+
+    //=============== Control KeyDown ================= //
+    /*var keyboardEvent_Ctrl_Keydown = document.createEvent("KeyboardEvent");
+    var initMethod = typeof keyboardEvent_Ctrl_Keydown.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent_Ctrl_Keydown[initMethod](
+        "keydown", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        true, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        17, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    delete keyboardEvent_Ctrl_Keydown.metaKey;
+    keyboardEvent_Ctrl_Keydown.metaKey = false;
+    delete keyboardEvent_Ctrl_Keydown.shiftKey;
+    keyboardEvent_Ctrl_Keydown.shiftKey = false;
+    delete keyboardEvent_Ctrl_Keydown.ctrlKey;
+    keyboardEvent_Ctrl_Keydown.ctrlKey = true;
+    delete keyboardEvent_Ctrl_Keydown.currentTarget;
+    keyboardEvent_Ctrl_Keydown.currentTarget = document.getElementsByTagName('body')[0];
+    delete keyboardEvent_Ctrl_Keydown.keyCode;
+    keyboardEvent_Ctrl_Keydown.keyCode = 17;
+    delete keyboardEvent_Ctrl_Keydown.which;
+    keyboardEvent_Ctrl_Keydown.which = 17;
+    document.getElementsByTagName('body')[0].dispatchEvent(keyboardEvent_Ctrl_Keydown);
+
+    //=============== F KeyPress ================= //
+    var keyboardEvent = document.createEvent("KeyboardEvent");
+    initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent[initMethod](
+        "keydown", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        true, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        70, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    delete keyboardEvent.metaKey;
+    keyboardEvent.metaKey = false;
+    delete keyboardEvent.type;
+    keyboardEvent.type = 'keydown';
+    delete keyboardEvent.ctrlKey;
+    keyboardEvent.ctrlKey = true;
+    delete keyboardEvent.shiftKey;
+    keyboardEvent.shiftKey = false;
+    delete keyboardEvent.keyCode;
+    keyboardEvent.keyCode = 70;
+    delete keyboardEvent.charCode;
+    keyboardEvent.charCode = 0;
+    delete keyboardEvent.which;
+    keyboardEvent.which = 70;
+    delete keyboardEvent.keyIdentifier;
+    keyboardEvent.keyIdentifier = "U+0046";
+    document.getElementsByTagName('body')[0].dispatchEvent(keyboardEvent);*/
+
+    /*var keyboardEvent2 = document.createEvent("KeyboardEvent");
+    initMethod = typeof keyboardEvent2.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent2[initMethod](
+        "keypress", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        false, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        102, // keyCodeArg : unsigned long the virtual key code, else 0
+        102 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    delete keyboardEvent2.metaKey;
+    keyboardEvent2.metaKey = false;
+    delete keyboardEvent2.type;
+    keyboardEvent2.type = 'keypress';
+    delete keyboardEvent2.ctrlKey;
+    keyboardEvent2.ctrlKey = true;
+    delete keyboardEvent2.shiftKey;
+    keyboardEvent2.shiftKey = false;
+    delete keyboardEvent2.keyCode;
+    keyboardEvent2.keyCode = 102;
+    delete keyboardEvent2.charCode;
+    keyboardEvent2.charCode = 102;
+    delete keyboardEvent2.which;
+    keyboardEvent2.which = 102;
+    delete keyboardEvent2.keyIdentifier;
+    keyboardEvent2.keyIdentifier = "U+0046";
+    document.getElementsByTagName('body')[0].dispatchEvent(keyboardEvent2);
+
+    var keyboardEvent3 = document.createEvent("KeyboardEvent");
+    initMethod = typeof keyboardEvent3.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent3[initMethod](
+        "keyup", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        false, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        70, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    delete keyboardEvent3.metaKey;
+    keyboardEvent3.metaKey = false;
+    delete keyboardEvent3.type;
+    keyboardEvent3.type = 'keyup';
+    delete keyboardEvent3.ctrlKey;
+    keyboardEvent3.ctrlKey = true;
+    delete keyboardEvent3.shiftKey;
+    keyboardEvent3.shiftKey = false;
+    delete keyboardEvent3.keyCode;
+    keyboardEvent3.keyCode = 70;
+    delete keyboardEvent3.charCode;
+    keyboardEvent3.charCode = 0;
+    delete keyboardEvent3.which;
+    keyboardEvent3.which = 70;
+    delete keyboardEvent3.keyIdentifier;
+    keyboardEvent3.keyIdentifier = "U+0046";
+    document.getElementsByTagName('body')[0].dispatchEvent(keyboardEvent3);*/
+
+
+
+   /* var event_F_KeyDown = document.createEvent('KeyboardEvent');
+
+    delete event_F_KeyDown.keyCode;
+    event_F_KeyDown.keyCode = 70;
+    delete event_F_KeyDown.which;
+    event_F_KeyDown.which = 70;
+    delete event_F_KeyDown.charCode;
+    event_F_KeyDown.charCode = 0;
+    delete event_F_KeyDown.ctrlKey;
+    event_F_KeyDown.ctrlKey = true;
+    delete event_F_KeyDown.shiftKey;
+    event_F_KeyDown.shiftKey = false;
+    delete event_F_KeyDown.keyIdentifier;
+    event_F_KeyDown.keyIdentifier = "U+0046";
+    delete event_F_KeyDown.metaKey;
+    event_F_KeyDown.metaKey = false;
+    delete event_F_KeyDown.currentTarget;
+    event_F_KeyDown.currentTarget = document;
+    delete event_F_KeyDown.eventPhase;
+    event_F_KeyDown.eventPhase = 3;
+    delete event_F_KeyDown.cancelable;
+    event_F_KeyDown.cancelable = false;
+    delete event_F_KeyDown.originalEvent;
+    event_F_KeyDown.originalEvent=false;
+    delete event_F_KeyDown.bubbles;
+    event_F_KeyDown.bubbles=true;
+
+
+    event_F_KeyDown.initKeyboardEvent('keydown', true, true, document.defaultView, "U+0046", 0, '');
+
+    //console.log(event_F_KeyDown);
+
+    document.getElementsByClassName('fast_search_result')[0].dispatchEvent(event_F_KeyDown);*/
+
+
+    //=============== F KeyUp ================= //
+    /*var event_F_KeyUp = document.createEvent('KeyboardEvent');
+
+    delete event_F_KeyUp.keyCode;
+    event_F_KeyUp.keyCode = 70;
+    delete event_F_KeyUp.which;
+    event_F_KeyUp.which = 70;
+    delete event_F_KeyUp.charCode;
+    event_F_KeyUp.charCode = 70;
+    delete event_F_KeyUp.ctrlKey;
+    event_F_KeyUp.ctrlKey = true;
+    delete event_F_KeyUp.shiftKey;
+    event_F_KeyUp.shiftKey = false;
+    delete event_F_KeyUp.keyIdentifier;
+    event_F_KeyUp.keyIdentifier = "U+0046";
+    delete event_F_KeyUp.metaKey;
+    event_F_KeyUp.metaKey = false;
+    delete event_F_KeyUp.currentTarget;
+    event_F_KeyUp.currentTarget = document;
+    delete event_F_KeyUp.eventPhase;
+    event_F_KeyUp.eventPhase = 3;
+    delete event_F_KeyUp.cancelable;
+    event_F_KeyUp.cancelable = false;
+    delete event_F_KeyUp.originalEvent;
+    event_F_KeyUp.originalEvent=false;
+
+
+    event_F_KeyUp.initKeyboardEvent('keyup', true, true, document.defaultView, "U+0046", 0, '');
+
+    //console.log(event_F_KeyUp);
+
+    document.getElementsByClassName('fast_search_result')[0].dispatchEvent(event_F_KeyUp);*/
+
+
+
+    //=============== Control KeyUp ================= //
+    /*var keyboardEvent_Ctrl_Keyup = document.createEvent("KeyboardEvent");
+    var initMethod = typeof keyboardEvent_Ctrl_Keyup.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    keyboardEvent_Ctrl_Keyup[initMethod](
+        "keyup", // event type : keydown, keyup, keypress
+        true, // bubbles
+        true, // cancelable
+        window, // viewArg: should be window
+        false, // ctrlKeyArg
+        false, // altKeyArg
+        false, // shiftKeyArg
+        false, // metaKeyArg
+        17, // keyCodeArg : unsigned long the virtual key code, else 0
+        0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+    );
+    delete keyboardEvent_Ctrl_Keydown.shiftKey;
+    keyboardEvent_Ctrl_Keydown.shiftKey = false;
+    delete keyboardEvent_Ctrl_Keydown.ctrlKey;
+    keyboardEvent_Ctrl_Keydown.ctrlKey = true;
+    delete keyboardEvent_Ctrl_Keyup.currentTarget;
+    keyboardEvent_Ctrl_Keyup.currentTarget = document.getElementsByTagName('body')[0];
+    delete keyboardEvent_Ctrl_Keyup.keyCode;
+    keyboardEvent_Ctrl_Keyup.keyCode = 17;
+    delete keyboardEvent_Ctrl_Keyup.which;
+    keyboardEvent_Ctrl_Keyup.which = 17;
+    document.getElementsByTagName('body')[0].dispatchEvent(keyboardEvent_Ctrl_Keyup);*/
+}
+
+
 function Fast_search_next(current_found_id)
 {
+    //Emulate_Ctrl_F();
+
     var cur_new = parseInt(current_found_id);
     if(cur_new >=  parseInt($( ".fast_search_result").attr('matches')))
         cur_new = 1;
@@ -481,168 +941,7 @@ if(key == ' ' )
 
 }
 
-$( document ).keydown(function(e) {
-    /*console.log('e.which - ' + e.which );
-    console.log('e.charCode - ' + e.charCode );
-    console.log(e );*/
-    //restore some default browser keys
-    if(e.which == 116)
-    {
-        location.reload('true');
-    }
 
-
-    //console.log('e.target.tagName - ',e.target.tagName);
-    if(e.target.tagName != 'INPUT' && e.target.tagName != 'TEXTAREA')
-    {
-    // shift + F(а)
-    if(e.shiftKey && (e.keyCode == 70 ||  e.keyCode == 1040))
-    {
-        e.preventDefault();
-        e.stopPropagation();
-        myHilitor.remove();
-        $('.fast_search_result').show('1500');
-        if (getSelText()) {
-            matches = $('.found_text').length;
-            if (matches < 0)
-                matches = 0;
-
-            $($('.found_text')[0]).addClass('current_found').prop('contenteditable',true).focus().prop('contenteditable',false);
-            $( ".fast_search_result").attr('current_found','1').attr('matches',matches);
-
-            $('#count_matches').text(matches);
-            $('#current_found').text($( ".fast_search_result").attr('current_found'));
-
-            //$('.fast_search_form').hide();
-            $('.fast_search_result').show('1500');
-
-        }
-        else
-        {
-            //recount matches
-            var matches = $('.found_text').length;
-            $( ".fast_search_result").attr('matches',matches);
-            $('#count_matches').text(matches);
-
-            // just open search form
-            $('.fast_search_result').show('1500');
-            $('#searchbox_id').focus();
-
-            //$('.fast_search_form').show('1500');
-        }
-        //$('.fast_search_next').trigger('click');
-    }
-    //Shift + Z(Я) go to previous found fragment
-    else if(e.shiftKey && (e.keyCode == 90 ||  e.keyCode == 1071))
-    {
-        e.preventDefault();
-        e.stopPropagation();
-        $('.fast_search_prev').trigger('click');
-    }
-    //Shift + X(Ч) go to next found fragment
-    else if(e.shiftKey && (e.keyCode == 88 ||  e.keyCode == 1063))
-    {
-        e.preventDefault();
-        e.stopPropagation();
-        $('.fast_search_next').trigger('click');
-    }
-    //Shift + Q(Й) cancel search and close search form
-    else if(e.shiftKey && (e.keyCode == 81 ||  e.keyCode == 1049))
-    {
-        e.preventDefault();
-        e.stopPropagation();
-        myHilitor.remove();
-
-        //hiding search form
-        $('.fast_search_result').hide('slow');
-        //removing highlighting of old results
-        $('em.found_text').each(function(){
-            $(this).after($(this).html()).remove();
-        });
-        // setting all counters to zero
-        $('#count_matches').text(0);
-        $('#current_found').text(0);
-        $( ".fast_search_result").attr('matches',0).attr('current_found',0);
-
-    }
-    //если включен перехват нажатия F3
-    if(intercept_F3_keypress)
-    {
-
-        if(e.shiftKey==1 && e.keyCode == 114){
-            e.preventDefault();
-            e.stopPropagation();
-
-            $('.fast_search_prev').trigger('click');
-        }
-        else
-        if(e.which == 114)
-        {
-            e.preventDefault();
-            e.stopPropagation();
-            $('.fast_search_next').trigger('click');
-        }
-    }
-    //если включен перехват нажатия Ctrl + F
-        if(intercept_Ctrl_F_keypress)
-        {
-            if(e.ctrlKey && e.which == 70)
-            {
-                e.preventDefault();
-                e.stopPropagation();
-                //console.log('e.which - ' + e.which );
-                //console.log('e.charCode - ' + e.charCode );
-                //console.log(e );
-
-                myHilitor.remove();
-                $('.fast_search_result').show('1500');
-                if (getSelText()) {
-                    matches = $('.found_text').length;
-                    if (matches < 0)
-                        matches = 0;
-
-                    $($('.found_text')[0]).addClass('current_found').prop('contenteditable',true).focus().prop('contenteditable',false);
-                    $( ".fast_search_result").attr('current_found','1').attr('matches',matches);
-
-                    $('#count_matches').text(matches);
-                    $('#current_found').text($( ".fast_search_result").attr('current_found'));
-
-                    //$('.fast_search_form').hide();
-                    $('.fast_search_result').show('1500');
-
-
-
-                }
-                else
-                {
-                    $('.fast_search_result').show('1500');
-                    $('#searchbox_id').focus();
-
-                    //$('.fast_search_form').show('1500');
-                }
-            }
-
-        }
-
-    }
-    else
-    {
-        // prevent default search actions while typing
-        if(intercept_Ctrl_F_keypress)
-        {
-            if(e.ctrlKey && e.which == 70)
-                e.preventDefault();
-        }
-        if(intercept_F3_keypress)
-        {
-            if(e.which == 114)
-                e.preventDefault();
-        }
-
-
-    }
-
-});
 
 function Look_for_hidden_matches(){
     // looking for all found text fragments inside hidden elements and exclude them

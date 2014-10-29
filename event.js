@@ -1,21 +1,14 @@
 // This function is called onload in the popup code
 function getPageDetails(callback) {
-    // Inject the content script into the current page
-    /*var views = chrome.extension.getViews({type: "popup"});
 
-        //console.log('views0 -', views[0]);*/
+        chrome.tabs.executeScript(null, { file: 'content2.js' }, function(result) {
+            if (chrome.runtime.lastError) { // or if (!result)
+                // Get the error message via chrome.runtime.lastError.message
 
+                return chrome.runtime.lastError.message;
+            }
+        });
 
-    //if(!$("div").is(".popup2_ewq532_fast-search.ewq532_fast-search.ewq532_fast-search"))
-        chrome.tabs.executeScript(null, { file: 'content2.js' });
-    /*else
-        $('.popup2_ewq532_fast-search.ewq532_fast-search').show('slow');*/
-    // Perform the callback when a message is received from the content script
-chrome.runtime.onMessage.addListener(function (message) {
-        $('.popup2_ewq532_fast-search').show();
-        // Call the callback function
-        callback(message);
-    });
 };
 
 
@@ -33,68 +26,141 @@ chrome.commands.onCommand.addListener(function (command) {
 chrome.tabs.onUpdated.addListener(
     function (tabId, changeInfo, tab) {
         if (changeInfo.status === "complete" && tab.active) {
-            chrome.tabs.executeScript(null, { file: 'content.js' });
-            chrome.tabs.executeScript(null, { file: 'hilitor-yanosh.js' });
+            chrome.tabs.executeScript(null, { file: 'content.js' }, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
+            chrome.tabs.executeScript(null, { file: 'hilitor-yanosh.js' }, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
 
             /*chrome.tabs.executeScript(null, {file: 'jquery-ui.js'});*/
         }
     });
 
 var func = function(choosen_theme_name){
+
     switch(choosen_theme_name) {
         case "classic":
-            chrome.tabs.executeScript(null, {file: 'themes/theme_classic.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_classic.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "yellow":
             //loading theme_yellow.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_yellow.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_yellow.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "metro":
             //loading theme_metro.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_metro.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_metro.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "blue":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_blue.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_blue.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "3d":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_3d.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_3d.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "coral":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_coral.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_coral.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         default:
             ;
     }
+
+
 
 };
 
 var func2 = function(choosen_theme_name){
     switch(choosen_theme_name) {
         case "classic":
-            chrome.tabs.executeScript(null, {file: 'themes/theme_classic2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_classic2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "yellow":
             //loading theme_yellow.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_yellow2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_yellow2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "metro":
             //loading theme_metro.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_metro2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_metro2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "blue":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_blue2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_blue2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "3d":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_3d2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_3d2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         case "coral":
             //loading theme_blue.js
-            chrome.tabs.executeScript(null, {file: 'themes/theme_coral2.js'});
+            chrome.tabs.executeScript(null, {file: 'themes/theme_coral2.js'}, function(result) {
+                if (chrome.runtime.lastError) { // or if (!result)
+                    // Get the error message via chrome.runtime.lastError.message
+                    return chrome.runtime.lastError.message;
+                }
+            });
             break;
         default:
             ;
@@ -156,4 +222,51 @@ chrome.extension.onMessage.addListener(
 
     }
 );
+
+function copyToClipboard(text) {
+    var copyDiv = document.createElement('div');
+    copyDiv.contentEditable = true;
+    document.body.appendChild(copyDiv);
+    copyDiv.innerHTML = text;
+    copyDiv.unselectable = "off";
+    copyDiv.focus();
+    document.execCommand('SelectAll');
+    document.execCommand("Copy", false, null);
+    document.body.removeChild(copyDiv);
+}
+
+function copyFromClipboard() {
+    var copyDiv = document.createElement('div');
+    copyDiv.contentEditable = true;
+    document.body.appendChild(copyDiv);
+    copyDiv.innerHTML = text;
+    copyDiv.unselectable = "off";
+    copyDiv.focus();
+    document.execCommand('SelectAll');
+    document.execCommand("Paste", false, null);
+    var text = copyDiv.innerHTML;
+    document.body.removeChild(copyDiv);
+    return text;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
